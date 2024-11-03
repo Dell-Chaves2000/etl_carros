@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carros por Montadora e Ano</title>
+</head>
+<body>
+    <h1>Selecione a Montadora e o Ano</h1>
+    <form method="POST">
+        <label for="montadora">Montadora:</label>
+        <select name="montadora" required>
+            <option value="">Selecione uma montadora</option>
+            {% for montadora in montadoras %}
+            <option value="{{ montadora }}" {% if montadora == montadora_selecionado %} selected {% endif %}>
+                {{ montadora }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <label for="ano">Ano:</label>
+        <select name="ano" required>
+            <option value="">Selecione um ano</option>
+            {% for ano in anos %}
+            <option value="{{ ano }}" {% if ano == ano_selecionado %} selected {% endif %}>
+                {{ ano }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Buscar Modelos</button>
+    </form>
+
+    {% if colunas %}
+    <h2>Modelos encontrados:</h2>
+    
+    <div style="display: flex;">
+        {% for coluna in colunas %}
+        <ul style="margin-right: 20px;">
+            {% for modelo in coluna %}
+            <li>{{ modelo['modelo'] }} - {{ modelo['montadora'] }} ({{ modelo['ano'] }})</li>
+            {% endfor %}
+        </ul>
+        {% endfor %}
+    </div>
+    <p>Total de modelos: {{ total_modelos }}</p>
+
+    <!-- Paginação -->
+    <div>
+        {% if total_paginas > 1 %}
+            {% if pagina_atual > 1 %}
+            <a href="?pagina=1&montadora={{ montadora_selecionado }}&ano={{ ano_selecionado }}">Primeira</a>
+            <a href="?pagina={{ pagina_atual - 1 }}&montadora={{ montadora_selecionado }}&ano={{ ano_selecionado }}">Anterior</a>
+            {% endif %}
+
+            {% for pagina in range(1, total_paginas + 1) %}
+            {% if pagina >= pagina_atual - 1 and pagina <= pagina_atual + 1 %}
+                {% if pagina == pagina_atual %}
+                <strong>{{ pagina }}</strong>
+                {% else %}
+                <a href="?pagina={{ pagina }}&montadora={{ montadora_selecionado }}&ano={{ ano_selecionado }}">{{ pagina }}</a>
+                {% endif %}
+            {% endif %}
+            {% endfor %}
+
+            {% if pagina_atual < total_paginas %}
+            <a href="?pagina={{ pagina_atual + 1 }}&montadora={{ montadora_selecionado }}&ano={{ ano_selecionado }}">Próxima</a>
+            <a href="?pagina={{ total_paginas }}&montadora={{ montadora_selecionado }}&ano={{ ano_selecionado }}">Última</a>
+            {% endif %}
+        {% endif %}
+    </div>
+    {% endif %}
+</body>
+</html>
