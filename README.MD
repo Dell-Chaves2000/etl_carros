@@ -38,7 +38,7 @@ MONGO_URI=mongodb://localhost:27017/
 
 ## Instalar as dependências
 
-pip install
+pip install -r requerimento.txt
 
 ## Executar o etl
 
